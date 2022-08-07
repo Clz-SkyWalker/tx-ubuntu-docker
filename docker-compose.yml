@@ -22,6 +22,11 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock    
       #Docker守护进程（Docker daemon）默认监听的Unix域套接字（Unix domain socket），
       #容器中的进程可以通过它与Docker守护进程进行通信。简单来说容器使用宿主机docker命令
+    expose:
+      - "8080"
+      - "50000"
+    privileged: true
+    user: root
   go:
     build:
       context: ./golang
