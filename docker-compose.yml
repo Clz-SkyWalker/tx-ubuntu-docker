@@ -1,0 +1,40 @@
+version: '3.5'
+
+# 网络配置
+networks:
+  backend:
+
+services:
+  jenkins:
+    build: 
+      context: ./jenkins
+    container_name: jenkins    #指定容器名
+    networks:
+      - backend
+    ports:    #容器的端口映射到宿主机上（“:”前数字为宿主机端口，“:”后数字为容器端口）
+      - "8080:8080"    #自定义宿主机端口8080
+      - "5000:5000"
+    environment:
+      TZ: Asia/Shanghai    #指定容器运行所属时区
+    volumes:
+      - /data/jenkins/jenkins_home:/var/jenkins_home     
+      - /data/jenkins/home:/home    #将容器的/home目录映射到宿主机上目录中的/data/jenkins/home子目录 
+      - /var/run/docker.sock:/var/run/docker.sock    
+      #Docker守护进程（Docker daemon）默认监听的Unix域套接字（Unix domain socket），
+      #容器中的进程可以通过它与Docker守护进程进行通信。简单来说容器使用宿主机docker命令
+  go:
+    build:
+      context: ./golang
+    ports:                               # 设置端口映射
+      - "8000:8000"
+      - "8001:8001"
+      - "8002:8002"
+      - "8003:8003"
+      - "9000:9000"
+      - "9001:9001"
+      - "9002:9002"
+      - "9003:9003"
+    stdin_open: true                     # 打开标准输入，可以接受外部输入
+    tty: true
+    networks:
+      - backend
